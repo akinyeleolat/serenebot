@@ -1,0 +1,90 @@
+{
+	"type": "modal",
+	"callback_id": "hobby_data_submit",
+	"notify_on_close":true,
+	"clear_on_close":true,
+	"title": {
+		"type": "plain_text",
+		"text": "My App",
+		"emoji": true
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Submit",
+		"emoji": true
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "What are your favorite hobbies?",
+				"emoji": true
+			}
+		},
+		{
+			"type": "section",
+			"block_id": "hobby_selection_block",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Hobbies List"
+			},
+			"accessory": {
+				"type": "multi_static_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "Choose your hobbies",
+					"emoji": true
+				},
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Football",
+							"emoji": true
+						},
+						"value": "football"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Music",
+							"emoji": true
+						},
+						"value": "music"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Sleep",
+							"emoji": true
+						},
+						"value": "sleep"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Movies",
+							"emoji": true
+						},
+						"value": "movies"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "Basketball",
+							"emoji": true
+						},
+						"value": "basketball"
+					}
+				],
+				"action_id": "hobbies_selection_element"
+			}
+		}
+	]
+}

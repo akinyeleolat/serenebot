@@ -1,5 +1,8 @@
 {
 	"type": "modal",
+	"callback_id": "walk_info_data_submit",
+	"notify_on_close":true,
+	"clear_on_close":true,
 	"title": {
 		"type": "plain_text",
 		"text": "My App",
@@ -26,6 +29,7 @@
 		},
 		{
 			"type": "section",
+			"block_id": "day_selection_block",
 			"text": {
 				"type": "mrkdwn",
 				"text": "Pick a day"
@@ -91,11 +95,12 @@
 						"value": "sunday"
 					}
 				],
-				"action_id": "static_select-action"
+				"action_id": "day_selection_element"
 			}
 		},
 		{
 			"type": "section",
+			"block_id": "time_slots_selection_block",
 			"text": {
 				"type": "mrkdwn",
 				"text": "Pick the time slots"
@@ -156,9 +161,65 @@
 							"emoji": true
 						},
 						"value": "14:30"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "03:00 PM",
+							"emoji": true
+						},
+						"value": "15:00"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "03:30 PM",
+							"emoji": true
+						},
+						"value": "15:30"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "04:00 PM",
+							"emoji": true
+						},
+						"value": "16:00"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "04:30 PM",
+							"emoji": true
+						},
+						"value": "16:30"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "05:00 PM",
+							"emoji": true
+						},
+						"value": "17:00"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "05:30 PM",
+							"emoji": true
+						},
+						"value": "17:30"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "06:00 PM",
+							"emoji": true
+						},
+						"value": "18:00"
 					}
 				],
-				"action_id": "multi_static_select-action"
+				"action_id": "time_slots_selection_element"
 			}
 		}
 	]

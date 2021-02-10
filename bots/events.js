@@ -5,7 +5,7 @@ const { WebClient } = require("@slack/web-api");
 const { slackBotToken } = require("../config/app");
 const token = slackBotToken;
 const web = new WebClient(token);
-const feelingToday = require("./elements/checkFeeling");
+const messageJsonBlock = require("./elements/checkFeelingData");
 
 function listenForEvents(app) {
   app.use("/events", slackEvents.requestListener());
@@ -22,6 +22,7 @@ function listenForEvents(app) {
     console.log(
       `Received a message event from user ${event.user} in channel ${event.channel}`
     );
+    console.log(event);
     if (event && event.type === "message") {
       if (event.text === "!hello") {
         respondToEvent(event.channel, event.user);
@@ -37,12 +38,10 @@ function listenForEvents(app) {
 
 async function respondToEvent(channelId, userId) {
   try {
-    feelingToday.text = `Welcome! <@${userId}>,How are you doing?`;
-    await web.chat.postMessage({
-      channel: channelId,
-      text: "",
-      attachments: [feelingToday],
-    });
+    const mentionResponseBlock = { ...messageJsonBlock, ...{channel: channelId}}
+    mentionResponseBlock.callback_id = "feelings";
+    mentionResponseBlock.blocks[0].text.text=`Welcome! <@${userId}>, How are you doing?`;
+    await web.chat.postMessage(mentionResponseBlock);
     console.log("Message posted!");
   } catch (error) {
     console.log(error);
