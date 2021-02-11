@@ -9,7 +9,7 @@ const hobbyContent = require("./elements/getHobby.json");
 const walkInfoModal = require("./elements/getWalkInfo.json");
 const numberInput = require("./elements/numInput.json");
 const finalMsg = require("./elements/finalMsg.json");
-// const respondToButtons = require('./respondToButtons')
+
 
 module.exports.listenForInteractions = function (app) {
   app.use("/interactions", slackInteractions.requestListener());
@@ -17,6 +17,8 @@ module.exports.listenForInteractions = function (app) {
 
 slackInteractions.action({ actionId: "open_modal_button" }, async (payload) => {
   try {
+
+    walkInfoModal.private_metadata = payload.channel.id;
     await web.views.open({
       trigger_id: payload.trigger_id,
       view: walkInfoModal,
@@ -62,6 +64,7 @@ slackInteractions.viewSubmission("walk_info_data_submit", async (payload) => {
       };
     }
     if (payload.view.callback_id === "walk_info_data_submit") {
+        hobbyContent.private_metadata =  payload.view.private_metadata;
       return {
         response_action: "update",
         view: hobbyContent,
@@ -75,7 +78,7 @@ slackInteractions.viewSubmission("walk_info_data_submit", async (payload) => {
   }
 });
 
-//TODO: handle view close, view cancel api command
+//TODO: handle view close, view cancel 
 
 slackInteractions.viewSubmission("hobby_data_submit", async (payload) => {
   try {
@@ -96,6 +99,7 @@ slackInteractions.viewSubmission("hobby_data_submit", async (payload) => {
 
 
     if (payload.view.callback_id === "hobby_data_submit") {
+        numberInput.private_metadata =  payload.view.private_metadata;
       return {
         response_action: "update",
         view: numberInput,
@@ -125,7 +129,13 @@ slackInteractions.viewSubmission("num_input_submit", async (payload) => {
   }
   if (payload.view.callback_id === "num_input_submit") {
     
-    
+    const channel=payload.view.private_metadata;
+    await web.chat.postMessage({
+        channel: channel,
+        text: "",
+        blocks: finalMsg,
+        replace_original: true
+    })
   }
   return {
     response_action: "clear",

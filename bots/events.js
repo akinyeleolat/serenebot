@@ -22,9 +22,8 @@ function listenForEvents(app) {
     console.log(
       `Received a message event from user ${event.user} in channel ${event.channel}`
     );
-    console.log(event);
     if (event && event.type === "message") {
-      if (event.text === "!hello") {
+      if (event.text === "hello") {
         respondToEvent(event.channel, event.user);
       }
     }
