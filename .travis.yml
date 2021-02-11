@@ -1,5 +1,8 @@
 language: node_js
 
+services:
+  - mongodb
+
 node_js:
   - 14.15.1
 
@@ -8,6 +11,10 @@ env:
 
 install:
   - npm install
+
+before_script:
+  - sleep 15
+  - mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
 
 script:
   - npm test
