@@ -1,6 +1,5 @@
 require('dotenv').config();
 require('./config/database');
-const compression = require('compression');
 const helmet = require('helmet');
 const express = require('express');
 const cors = require('./utils/cors');
@@ -18,7 +17,6 @@ const records = require('./routes/v1');
 app.use(cors);
 
 if (environment === 'production') {
-  app.use(compression());
   app.use(helmet());
 }
 
@@ -27,7 +25,7 @@ app.use((err, req, res, next) => {
   if (err.type === 'entity.parse.failed') {
     res.json({
       status: 'error',
-      message: `invalid JSON '${err.body}' passed`,
+      message: 'invalid JSON  passed',
     });
   } else {
     next();
