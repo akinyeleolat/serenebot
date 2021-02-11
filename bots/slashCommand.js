@@ -1,6 +1,7 @@
 const express = require('express');
 const messageJsonBlock = require('./elements/checkFeelingData');
 const envConfig = require('../config/app');
+const logger = require('../utils/logger');
 
 module.exports.listenForCommands = async (app) => {
   app.use(express.urlencoded({ extended: true }));
@@ -8,10 +9,10 @@ module.exports.listenForCommands = async (app) => {
 
   app.post('/commands', (req, res) => {
     const { token, user_id, channel_id } = req.body;
-    console.log(`Received a slash command from user ${user_id} in channel ${channel_id}`);
+    logger.info(`Received a slash command from user ${user_id} in channel ${channel_id}`);
 
     if (token !== envConfig.slackVerifyToken) {
-      console.log('Invalid token');
+      logger.error('Invalid token');
       return;
     }
     const mentionResponseBlock = { ...messageJsonBlock, ...{ channel: channel_id } };
