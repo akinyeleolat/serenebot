@@ -16,9 +16,9 @@ async function respondToEvent(channelId, userId) {
     mentionResponseBlock.callback_id = 'feelings';
     mentionResponseBlock.blocks[0].text.text = `Welcome! <@${userId}>, How are you doing?`;
     await web.chat.postMessage(mentionResponseBlock);
-    console.log('Message posted!');
+    logger.info('Message posted!');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }
 
@@ -27,17 +27,12 @@ function listenForEvents(app) {
 
   slackEvents.on('app_mention', (event) => {
     logger.info(`Received an app_mention event from user ${event.user} in channel ${event.channel}`);
-    console.log(
-      `Received an app_mention event from user ${event.user} in channel ${event.channel}`,
-    );
 
     respondToEvent(event.channel, event.user);
   });
 
   slackEvents.on('message', (event) => {
-    console.log(
-      `Received a message event from user ${event.user} in channel ${event.channel}`,
-    );
+    logger.info(`Received a message event from user ${event.user} in channel ${event.channel}`);
     if (event && event.type === 'message') {
       if (event.text === 'hello') {
         respondToEvent(event.channel, event.user);
@@ -48,7 +43,6 @@ function listenForEvents(app) {
   // All errors in listeners are caught here. If this weren't caught, the program would terminate.
   slackEvents.on('error', (error) => {
     logger.error(`error: ${error}`);
-    console.log(`error: ${error}`);
   });
 }
 

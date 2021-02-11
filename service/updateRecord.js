@@ -23,16 +23,12 @@ function updateRecord(data) {
         updateData,
       } = locals.data;
 
-      console.log(locals.data);
-
       const recordInfo = await RecordModel
         .findOne({ userId })
         .sort({ createdAt: -1 })
         .limit(1);
 
       const { sessionId } = recordInfo;
-
-      console.log(recordInfo);
 
       const updatedRecord = await RecordModel.findOneAndUpdate({ sessionId }, updateData, {
         returnOriginal: false,

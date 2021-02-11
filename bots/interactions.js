@@ -14,6 +14,7 @@ const hobbyContent = require('./elements/getHobby.json');
 const walkInfoModal = require('./elements/getWalkInfo.json');
 const numberInput = require('./elements/numInput.json');
 const finalMsg = require('./elements/finalMsg.json');
+const logger = require('../utils/logger');
 
 module.exports.listenForInteractions = (app) => {
   app.use('/interactions', slackInteractions.requestListener());
@@ -40,7 +41,7 @@ slackInteractions.action({ actionId: 'open_modal_button' }, async (payload) => {
     };
     await createRecord(newRecord);
   } catch (e) {
-    console.log(JSON.stringify(e));
+    logger.error(JSON.stringify(e));
   }
 
   return {
@@ -85,6 +86,8 @@ slackInteractions.viewSubmission('walk_info_data_submit', async (payload) => {
       timeSlots: timeSlotList,
     };
 
+    await updateRecord({ userId, updateData });
+
     if (payload.view.callback_id === 'walk_info_data_submit') {
       hobbyContent.private_metadata = payload.view.private_metadata;
       return {
@@ -92,12 +95,11 @@ slackInteractions.viewSubmission('walk_info_data_submit', async (payload) => {
         view: hobbyContent,
       };
     }
-    await updateRecord({ userId, updateData });
     return {
       response_action: 'clear',
     };
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 });
 
@@ -111,8 +113,7 @@ slackInteractions.viewSubmission('hobby_data_submit', async (payload) => {
       .selected_options;
 
     const hobbyList = hobbySelection.map((hobby) => hobby.value);
-
-    console.log(hobbyList);
+    const userId = payload.user.id;
 
     if (hobbyList.length < 1) {
       return {
@@ -123,6 +124,10 @@ slackInteractions.viewSubmission('hobby_data_submit', async (payload) => {
       };
     }
 
+    const updateData = {
+      hobbies: hobbyList,
+    };
+    await updateRecord({ userId, updateData });
     if (payload.view.callback_id === 'hobby_data_submit') {
       numberInput.private_metadata = payload.view.private_metadata;
       return {
@@ -134,35 +139,43 @@ slackInteractions.viewSubmission('hobby_data_submit', async (payload) => {
       response_action: 'clear',
     };
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 });
 
 slackInteractions.viewSubmission('num_input_submit', async (payload) => {
-  const blockData = payload.view.state;
+  try {
+    const blockData = payload.view.state;
 
-  const numInput = blockData.values.num_input_block.num_input_element.value;
+    const numInput = blockData.values.num_input_block.num_input_element.value;
+    const userId = payload.user.id;
 
-  console.log(numInput);
-
-  if (numInput.length !== 3) {
-    return {
-      response_action: 'errors',
-      errors: {
-        num_input_block: 'first 3 digits is required',
-      },
+    if (numInput.length !== 3) {
+      return {
+        response_action: 'errors',
+        errors: {
+          num_input_block: 'first 3 digits is required',
+        },
+      };
+    }
+    const updateData = {
+      numInput,
     };
+    await updateRecord({ userId, updateData });
+
+    if (payload.view.callback_id === 'num_input_submit') {
+      const channel = payload.view.private_metadata;
+      await web.chat.postMessage({
+        channel,
+        text: '',
+        blocks: finalMsg,
+        replace_original: true,
+      });
+    }
+    return {
+      response_action: 'clear',
+    };
+  } catch (error) {
+    logger.error(error);
   }
-  if (payload.view.callback_id === 'num_input_submit') {
-    const channel = payload.view.private_metadata;
-    await web.chat.postMessage({
-      channel,
-      text: '',
-      blocks: finalMsg,
-      replace_original: true,
-    });
-  }
-  return {
-    response_action: 'clear',
-  };
 });
