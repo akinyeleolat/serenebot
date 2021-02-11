@@ -13,6 +13,7 @@ const interactions = require('./bots/interactions');
 const slashCommand = require('./bots/slashCommand');
 
 const { environment } = require('./config/app');
+const records = require('./routes/v1');
 
 app.use(cors);
 
@@ -39,6 +40,10 @@ app.use(circuitBreaker);
 app.get('/', (req, res) => {
   res.json({ version: '1.0' });
 });
+
+const version = '/v1';
+
+app.use(version, rateLimiter, records);
 
 app.use(rateLimiter);
 
