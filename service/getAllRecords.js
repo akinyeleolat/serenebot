@@ -13,6 +13,7 @@ function getAllRecord(data) {
   async function servicePromiseExecutor(resolve, reject) {
     try {
       locals.record = await RecordModel.find().sort({ createdAt: -1 });
+      // TODO: paginated
       resolve(locals.record);
     } catch (e) {
       errorResponse.handleError(reject, e);
